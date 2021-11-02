@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react'
 import { 
   BrowserRouter as Router,
   Switch, Route, Link, useParams, useHistory
@@ -102,10 +103,19 @@ const CreateNew = (props) => {
   )
 
 }
-const NotificationMessage = ({ message }) => {
+const NotificationMessage = ({ notification }) => {
+  const style = {
+    borderThickness: '1px',
+    padding: '1em',
+    color: 'green',
+    borderStyle: 'solid'
+  }
+  
+  if(!notification) return null
+  
   return(
-    <div>
-      {message}
+    <div style={style}>
+      {notification}
     </div>
   )
 }
@@ -130,16 +140,20 @@ const App = () => {
   const [currentTimeoutId, setCurrentTimeoutId] = useState(0)
   const displayNotification = (message) => {
     setNotification(message)
+    console.log('notification message', message)
     clearTimeout(currentTimeoutId)
+    
+    
     setCurrentTimeoutId(setTimeout(() => {
-      setNotification("")
-    }), 10000)
+      setNotification(null)
+      console.log('10 seconds')
+    }, 10000))
   }
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
-    displayNotification(anecdote.content)
+    displayNotification("anecdote.content")
   }
 
   const anecdoteById = (id) =>
@@ -160,7 +174,7 @@ const App = () => {
     <Router>
       <h1>Software anecdotes</h1>
       <Menu />
-      {notification ? null : <NotificationMessage message={notification}/>}
+      <NotificationMessage notification={notification}/>
       <Switch>
         
         <Route path="/about">
