@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react'
+import { useField } from './hooks'
 import { 
   BrowserRouter as Router,
   Switch, Route, Link, useParams, useHistory
@@ -64,21 +64,30 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  // const [content, setContent] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [info, setInfo] = useState('')
+
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push('/')
+  }
+  const clearFields = () => {
+    content.clear()
+    author.clear()
+    info.clear()
   }
   
   return (
@@ -87,22 +96,24 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} clear=""/>
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} clear=""/>
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info} clear=""/>
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={clearFields}>clear</button>
       </form>
     </div>
   )
 
 }
+
 const NotificationMessage = ({ notification }) => {
   const style = {
     borderThickness: '1px',
@@ -153,7 +164,7 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
-    displayNotification("anecdote.content")
+    displayNotification(`${anecdote.content} addded!`)
   }
 
   const anecdoteById = (id) =>
