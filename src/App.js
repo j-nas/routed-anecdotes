@@ -8,13 +8,13 @@ const Menu = () => {
     paddingRight: 5
   }
   return (
-    <Router>
+    
     <div>
       <Link style={padding} to="/">anecdotes</Link>
       <Link style={padding} to="/create">create new</Link>
       <Link style={padding} to="/about">about</Link>
     </div>
-    </Router>
+    
   )
 }
 
@@ -133,7 +133,7 @@ const App = () => {
       <Menu />
       <Switch>
         
-        <Route path="about">
+        <Route path="/about">
           <About />
         </Route>
         <Route path="/create">
